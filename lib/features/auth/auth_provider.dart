@@ -46,6 +46,28 @@ class AuthController {
     }
   }
 
+  Future<void> signUp(String email, String password, String name) async {
+    if (!isSupabaseReady) {
+      throw StateError('Supabase is not initialized yet.');
+    }
+    final response = await supabase.auth.signUp(
+      email: email,
+      password: password,
+      data: {'name': name},
+    );
+    final userId = response.user?.id;
+    if (userId == null) {
+      throw Exception('Sign up failed — no user returned.');
+    }
+    // Insert into admins table so the user can be granted access
+    // after email confirmation. The row is created with pending status.
+    await supabase.from('admins').upsert({
+      'id': userId,
+      'name': name,
+      'email': email,
+    });
+  }
+
   Future<void> resetPassword(String email) async {
     if (!isSupabaseReady) {
       throw StateError('Supabase is not initialized yet.');

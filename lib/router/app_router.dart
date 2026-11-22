@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cableapp/data/supabase_client.dart';
 import 'package:cableapp/features/auth/forgot_password_page.dart';
 import 'package:cableapp/features/auth/login_page.dart';
+import 'package:cableapp/features/auth/signup_page.dart';
+import 'package:cableapp/features/complaints/complaints_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' show AuthChangeEvent;
 import 'package:cableapp/features/billing/billing_page.dart';
@@ -49,13 +51,15 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final loggedIn = isSupabaseReady && supabase.auth.currentSession != null;
       final authRoute =
           state.matchedLocation == '/login' ||
-          state.matchedLocation == '/forgot-password';
+          state.matchedLocation == '/forgot-password' ||
+          state.matchedLocation == '/signup';
       if (!loggedIn && !authRoute) return '/login';
       if (loggedIn && state.matchedLocation == '/login') return '/';
       return null;
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/signup', builder: (context, state) => const SignupPage()),
       GoRoute(
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordPage(),
@@ -96,6 +100,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/expenses',
             builder: (context, state) => const ExpensesPage(),
+          ),
+          GoRoute(
+            path: '/complaints',
+            builder: (context, state) => const ComplaintsPage(),
           ),
           GoRoute(
             path: '/reports',

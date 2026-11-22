@@ -48,6 +48,14 @@ class BaseRepository {
     await supabase.from(table).upsert(clean);
   }
 
+  Future<void> update(String id, Map<String, dynamic> payload) async {
+    final clean = Map<String, dynamic>.from(payload)
+      ..removeWhere(
+        (_, value) => value == null || (value is String && value.isEmpty),
+      );
+    await supabase.from(table).update(clean).eq('id', id);
+  }
+
   Future<void> delete(String id) async {
     await supabase.from(table).delete().eq('id', id);
   }

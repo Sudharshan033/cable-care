@@ -7,8 +7,9 @@ class StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = switch (status) {
+    final color = switch (status.toLowerCase()) {
       'active' || 'paid' || 'completed' || 'available' => Colors.green,
+      'partial' || 'partially_paid' => Colors.amber.shade800,
       'pending' || 'assigned' || 'in_progress' => Colors.orange,
       'suspended' || 'repair' => Colors.blueGrey,
       'disconnected' || 'damaged' || 'closed' => Colors.red,

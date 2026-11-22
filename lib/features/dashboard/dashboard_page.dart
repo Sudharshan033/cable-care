@@ -1,3 +1,4 @@
+import 'package:cableapp/core/services/unit_service.dart';
 import 'package:cableapp/core/utils/formatters.dart';
 import 'package:cableapp/core/widgets/page_header.dart';
 import 'package:cableapp/data/models/app_record.dart';
@@ -7,15 +8,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dashboardProvider = FutureProvider((ref) async {
+  final activeUnit = ref.watch(activeUnitIdProvider);
+  final custFilters = <String, Object?>{};
+  if (activeUnit != null) {
+    custFilters['area_id'] = activeUnit;
+  }
   final customers = await ref
       .read(repositoryProvider('customers'))
-      .list(limit: 1000);
-  final payments = await ref
+      .list(limit: 1000, filters: custFilters);
+  final custIds = customers.map((c) => c.id).toSet();
+
+  final allPayments = await ref
       .read(repositoryProvider('payments'))
       .list(limit: 1000);
-  final bills = await ref
+  final payments = activeUnit == null
+      ? allPayments
+      : allPayments
+          .where((p) => custIds.contains(p.text('customer_id')))
+          .toList();
+
+  final allBills = await ref
       .read(repositoryProvider('monthly_bills'))
       .list(limit: 1000);
+  final bills = activeUnit == null
+      ? allBills
+      : allBills.where((b) => custIds.contains(b.text('customer_id'))).toList();
+
   return DashboardData(customers, payments, bills);
 });
 
@@ -366,7 +384,7 @@ class _RevenueChart extends StatelessWidget {
       );
     }
 
-    const _months = [
+    const months = [
       'J','F','M','A','M','J','J','A','S','O','N','D'
     ];
 
@@ -390,7 +408,7 @@ class _RevenueChart extends StatelessWidget {
                 final idx = value.toInt();
                 String label;
                 if (yearView) {
-                  label = idx >= 0 && idx < 12 ? _months[idx] : '';
+                  label = idx >= 0 && idx < 12 ? months[idx] : '';
                 } else {
                   label = (idx % 5 == 1) ? '$idx' : '';
                 }

@@ -1,3 +1,4 @@
+import 'package:cableapp/core/widgets/app_logo.dart';
 import 'package:cableapp/features/auth/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -38,19 +39,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Logo / branding
-                      Icon(
-                        Icons.cable_rounded,
-                        size: 56,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'CableCare Admin',
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
+                      const Center(
+                        child: AppLogo(
+                          size: 56,
+                          showText: true,
+                          subtitle: 'Network Operations & Billing',
                         ),
-                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -129,6 +123,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         label: const Text('Sign In'),
                         style: FilledButton.styleFrom(
                           minimumSize: const Size.fromHeight(48),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Sign up link
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () => context.go('/signup'),
+                          child: const Text(
+                            "Don't have an account? Sign up",
+                          ),
                         ),
                       ),
                     ],

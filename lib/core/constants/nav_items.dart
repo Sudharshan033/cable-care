@@ -10,7 +10,6 @@ class NavItem {
 const navItems = [
   NavItem('Dashboard', '/', Icons.dashboard_outlined),
   NavItem('Customers', '/customers', Icons.people_outline),
-  NavItem('Monthly Bills', '/billing', Icons.receipt_long_outlined),
   NavItem('Payments', '/payments', Icons.payments_outlined),
   NavItem(
     'Pending Payments',
@@ -18,6 +17,7 @@ const navItems = [
     Icons.pending_actions_outlined,
   ),
   NavItem('Expenses', '/expenses', Icons.account_balance_wallet_outlined),
+  NavItem('Complaints', '/complaints', Icons.report_problem_outlined),
   NavItem('Reports', '/reports', Icons.analytics_outlined),
   NavItem('Settings', '/settings', Icons.settings_outlined),
   NavItem('Profile', '/profile', Icons.person_outline),

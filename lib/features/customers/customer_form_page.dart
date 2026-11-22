@@ -1,3 +1,4 @@
+import 'package:cableapp/core/services/unit_service.dart';
 import 'package:cableapp/core/widgets/page_header.dart';
 import 'package:cableapp/data/repositories/base_repository.dart';
 import 'package:cableapp/features/shared/module_list_page.dart';
@@ -51,6 +52,10 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
     if (widget.id != null && initial == null) {
       return const Center(child: CircularProgressIndicator());
     }
+    final unitState = ref.watch(unitProvider);
+    final activeUnit = ref.watch(activeUnitIdProvider);
+    final defaultUnit = activeUnit ?? defaultUnit1Id;
+
     return ListView(
       children: [
         PageHeader(title: widget.id == null ? 'Add Customer' : 'Edit Customer'),
@@ -71,6 +76,27 @@ class _CustomerFormPageState extends ConsumerState<CustomerFormPage> {
                   _field('email', 'Email'),
                   _field('address', 'Address', width: 620),
                   _field('village', 'Village'),
+                  SizedBox(
+                    width: 300,
+                    child: FormBuilderDropdown<String>(
+                      name: 'area_id',
+                      initialValue: initial?['area_id'] ?? defaultUnit,
+                      decoration: const InputDecoration(
+                        labelText: 'Place / Operational Unit',
+                        prefixIcon: Icon(Icons.location_on_outlined),
+                      ),
+                      items: [
+                        DropdownMenuItem(
+                          value: unitState.unit1.id,
+                          child: Text('${unitState.unit1.name} (Unit 1)'),
+                        ),
+                        DropdownMenuItem(
+                          value: unitState.unit2.id,
+                          child: Text('${unitState.unit2.name} (Unit 2)'),
+                        ),
+                      ],
+                    ),
+                  ),
                   _field('pincode', 'Pincode'),
                   _field('box_id', 'Box ID'),
                   _field('vc_number', 'VC number'),
